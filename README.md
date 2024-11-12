@@ -64,13 +64,15 @@ Ensure you have the following software installed:
 3. Install JavaScript dependencies:
 ```yarn install```
 
-4. Create and migrate the database:
+4. Create config/database.yml file and Add configuration
+
+5. Create and migrate the database:
 ```rails db:create db:migrate```
 
-5. Seed the database with initial data:
+6. Seed the database with initial data:
 ```rails db:seed```
 
-6. Start the Rails server:
+7. Start the Rails server:
 ```rails s```
 
 The application should now be running on http://localhost:3000.
