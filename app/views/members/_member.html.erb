@@ -1,0 +1,15 @@
+<div id="<%= dom_id(member) %>" class="card mb-3 shadow-sm">
+  <div class="card-body">
+    <div class="d-flex justify-content-between">
+      <p class="card-text">
+        <strong>User:</strong>
+        <span class="font-weight-bold"><%= member.user.first_name %> <%= member.user.last_name %></span>
+      </p>
+
+      <p class="card-text">
+        <strong>Email:</strong>
+        <span class="text-muted"><%= member.user.email %></span>
+      </p>
+    </div>
+  </div>
+</div>

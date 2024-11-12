@@ -1,0 +1,101 @@
+<%= form_with model: @team, local: true do |f| %>
+  <div class="create-team-container">
+    <h2><%= @team.new_record? ? "Create Team" : "Edit Team" %></h2>
+    <p>Please fill in your team information</p>
+
+    <!-- Team Name and Description -->
+    <div class="form-group">
+      <%= f.label :name, "TEAM NAME", class: "label" %>
+      <%= f.text_field :name, class: "input-field", required: true %>
+    </div>
+    
+    <div class="form-group">
+      <%= f.label :description, "TEAM DESCRIPTION", class: "label" %>
+      <%= f.text_area :description, class: "input-field", required: true %>
+    </div>
+
+    <!-- Team Owner (Static Display) -->
+    <div class="form-group owner-display">
+      <label>TEAM OWNER</label>
+      <p class="owner-name"><%= current_user.first_name %> <%= current_user.last_name %></p>
+    </div>
+
+    <!-- Hidden Field for Selected Member User IDs -->
+    <%= f.hidden_field :member_ids, id: "selected-members-field", value: @team.members.pluck(:user_id).join(",") %>
+
+    <!-- Team Members Section -->
+    <h3>TEAM MEMBERS</h3>
+    <p>Add members to your team by selecting them from the list below (only members of your network will be displayed on the list)</p>
+
+    <!-- Filter Section -->
+    <div class="form-group row">
+      <div class="col-md-8">
+        <input type="text" name="filter" value="<%= params[:filter] %>" class="form-control" placeholder="Search by last name">
+      </div>
+      <div class="col-md-4">
+        <button type="button" id="search-button" class="btn btn-primary btn-block" onclick="refreshpage();">SEARCH</button>
+      </div>
+    </div>
+
+    <!-- Members List -->
+    <div class="members-section" data-controller="members">
+      <% # Collect user_ids of team members to easily check membership %>
+      <% team_member_user_ids = @team.members.pluck(:user_id) %>
+          
+      <div class="members-list network-list" data-members-target="networkList">
+        <h4>NETWORK</h4>
+        <% (@members || []).each do |member| %>
+          <% # Check if the member's user_id is in the list of team member user_ids %>
+          <% is_member_of_team = team_member_user_ids.include?(member.id) %>
+      
+          <div class="member" 
+               data-id="<%= member.id %>" 
+               data-name="<%= member.first_name + " " + member.last_name %>" 
+               data-email="<%= member.email %>" 
+               style="<%= 'display: none;' if is_member_of_team %>">
+            
+            <span class="member-name"><%= member.first_name + " " + member.last_name %></span>
+            <span class="member-email"><%= member.email %></span>
+            <button type="button" class="add-button" data-action="click->members#add">+</button>
+          </div>
+        <% end %>
+      </div>
+    
+      <!-- Selected Team Members List -->
+      <div class="members-list team-list" data-members-target="teamList">
+        <h4>IN THIS TEAM</h4>
+        <% if @team.persisted? %>
+          <!-- Display existing members if this is an edit form -->
+          <% (@team_members || []).each do |team_member| %>
+            <div class="member" data-id="<%= team_member.id %>" data-name="<%= team_member.first_name + " " + team_member.last_name %>" data-email="<%= team_member.email %>">
+              <span class="member-name"><%= team_member.first_name + " " + team_member.last_name %></span>
+              <span class="member-email"><%= team_member.email %></span>
+              <button type="button" class="remove-button" data-action="click->members#remove">-</button>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="form-group text-center mt-2">
+      <%= f.submit @team.new_record? ? "Create Team" : "Update Team", class: "submit-button" %>
+    </div>
+  </div>
+<% end %>
+
+<script>
+  function refreshpage() {
+  // Get the filter value from the input field
+  const filter = document.querySelector('[name="filter"]').value;
+  
+  // Create a new URL with the current URL and updated query parameter
+  const currentUrl = new URL(window.location.href);
+  
+  // Set or update the 'filter' query parameter
+  currentUrl.searchParams.set('filter', filter);
+  
+  // Reload the page with the updated URL
+  window.location.href = currentUrl.toString();
+}
+</script>

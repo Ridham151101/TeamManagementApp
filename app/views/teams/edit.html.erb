@@ -1,0 +1,21 @@
+<h1 class="text-center my-4">Editing Team</h1>
+
+<%= render "form", team: @team %>
+
+<br>
+
+<div class="text-center my-3">
+  <%= link_to "Show this team", @team, class: "btn btn-info mx-2" %>
+  <%= link_to "Back to teams", teams_path, class: "btn btn-secondary mx-2" %>
+</div>
+
+<style>
+  h1 {
+    color: #007bff; /* Blue color for the heading */
+    font-size: 2.5rem; /* Larger font size for emphasis */
+  }
+
+  .text-center {
+    font-size: 1.25rem; /* Custom font size for links */
+  }
+</style>

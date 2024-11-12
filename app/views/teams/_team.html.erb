@@ -1,0 +1,51 @@
+<div id="<%= dom_id team %>" class="card mb-4 shadow-sm" style="max-width: 600px; margin: auto;">
+  <div class="card-header bg-primary text-white text-center">
+    <h4 class="mb-0"><%= team.name %></h4>
+  </div>
+  
+  <div class="card-body">
+    <p class="card-text">
+      <strong>Description:</strong>
+      <span class="text-muted"><%= team.description %></span>
+    </p>
+
+    <p class="card-text">
+      <strong>Owner:</strong>
+      <span class="text-muted"><%= team.user.first_name %> <%= team.user.last_name %></span>
+    </p>
+
+    <div class="card-text">
+      <div class="d-flex align-items-center">
+        <strong class="me-1">Members:</strong>
+        <%= button_to "Show Members", team_members_path(team), method: :get, remote: true, class: "btn btn-info" %>
+      </div>
+    </div>
+  </div>
+  
+  <% if team_owner? %>
+    <div class="card-footer d-flex justify-content-center gap-2">
+      <%= link_to "Edit Team", edit_team_path(team), class: "btn btn-primary" %>
+      <%= button_to 'Delete Team', team_path(team), method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "btn btn-danger" %>
+    </div>
+  <% end %>
+</div>
+
+<style>
+  .card-header {
+    font-size: 1.5rem;
+    padding: 0.75rem;
+  }
+
+  .card-body {
+    padding: 1.25rem;
+  }
+
+  .card-footer {
+    padding: 0.75rem;
+  }
+
+  .list-group-item {
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+  }
+</style>

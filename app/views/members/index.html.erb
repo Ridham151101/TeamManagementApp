@@ -1,0 +1,75 @@
+<div class="container my-4">
+  <!-- Back Button Section -->
+  <div class="mb-4">
+    <%= link_to "Back to Teams", teams_path, class: "btn btn-secondary" %>
+  </div>
+
+  <!-- Displaying the notice message with Bootstrap styling -->
+  <% if notice %>
+    <div class="alert alert-success" role="alert">
+      <%= notice %>
+    </div>
+  <% end %>
+
+  <!-- Team Name Section -->
+  <div class="mb-4">
+    <h1 class="text-center text-primary">Team: <%= @team.name %></h1>
+  </div>
+
+  <!-- Filter Form -->
+  <div class="mb-4">
+    <%= form_with(url: team_members_path(@team), method: :get, local: true, class: "form-inline", data: { turbo: false }) do |f| %>
+      <div class="form-group mr-2">
+        <%= f.label :last_name, "Filter by Last Name", class: "sr-only" %>
+        <%= f.text_field :last_name, 
+                        value: params[:last_name],
+                        class: "form-control", 
+                        placeholder: "Enter last name",
+                        id: "member_last_name" %>
+      </div>
+      <%= f.submit "Filter", class: "btn btn-primary", id: "filter_submit" %>
+    <% end %>
+  </div>
+
+  <!-- Members Section -->
+  <div id="members">
+    <% @members.each do |member| %>
+      <%= render partial: "member", locals: { member: member } %>
+    <% end %>
+  </div>
+
+  <!-- Pagination Links -->
+  <div class="d-flex justify-content-center">
+    <%= paginate @members %>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Get the form element
+  const filterForm = document.querySelector('form');
+  const lastNameInput = document.getElementById('member_last_name');
+
+  // Store the initial value
+  let lastValue = lastNameInput.value;
+
+  filterForm.addEventListener('submit', function(e) {
+    // Update the URL with the search parameter without refreshing the page
+    const searchParams = new URLSearchParams(window.location.search);
+    searchParams.set('last_name', lastNameInput.value);
+    
+    // Preserve the input value
+    lastValue = lastNameInput.value;
+
+    // Update URL without page refresh
+    const newUrl = `${window.location.pathname}?${searchParams.toString()}`;
+    window.history.pushState({ path: newUrl }, '', newUrl);
+  });
+
+  // Restore value if browser's back/forward buttons are used
+  window.addEventListener('popstate', function() {
+    const params = new URLSearchParams(window.location.search);
+    lastNameInput.value = params.get('last_name') || lastValue;
+  });
+});
+</script>

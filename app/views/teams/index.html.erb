@@ -1,0 +1,38 @@
+<div class="container mt-4">
+  <p class="text-success text-center"><%= notice %></p>
+
+  <h1 class="text-primary text-center mb-4">Teams</h1>
+
+  <% if team_owner? %>
+    <div class="text-center mt-4 mb-4">
+      <%= link_to "New team", new_team_path, class: "btn btn-primary" %>
+    </div>
+  <% end %>
+
+  <div id="teams" class="row">
+    <% @teams.each do |team| %>
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <%= render team %>
+            <p class="text-center mt-3">
+              <%= link_to "Show this team", team, class: "btn btn-outline-primary" %>
+            </p>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  
+</div>
+
+<style>
+  #teams .card {
+    max-width: 100%;
+    margin: auto;
+  }
+
+  .btn-primary, .btn-outline-primary {
+    padding: 0.5rem 1.5rem;
+  }
+</style>
